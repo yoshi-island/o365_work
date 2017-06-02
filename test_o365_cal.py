@@ -12,7 +12,7 @@ import password_list
 user = password_list.user
 password = password_list.password
 category_dict = password_list.category_dict
-#category_dict = {'[mtg]':0,'[work]':0,'[study]':0,'[fun]':0,'[move]':0,'[other]':0}
+# category_dict = {'[mtg]':'00:00:00Z','[work]':'00:00:00Z','[study]':'00:00:00Z','[fun]':'00:00:00Z','[move]':'00:00:00Z','[other]':'00:00:00Z'}
 
 import time
 from datetime import datetime
@@ -22,16 +22,11 @@ import re
 
 
 if __name__ == '__main__':
-    #veh = open('./pw/veh.pw','r').read()
-    #vj = json.loads(veh)
 
     schedules = []
     json_outs = {}
 
-    #for veh in vj:
-        #e = veh['email']
     e = user
-        #p = veh['password']
     p = password
 
 
@@ -40,7 +35,7 @@ if __name__ == '__main__':
 
     start = time.time()
     start = time.strftime(time_string)
-    print('now is ', start)
+    #print('now is ', start)
     start = start[0:10] + 'T00:00:00Z'
     print('start is ',start)
 
@@ -48,11 +43,13 @@ if __name__ == '__main__':
     end += 60*60*24*1.5
     end = time.gmtime(end)
     end = time.strftime(time_string,end)
-    print('end time is ', end)
+    #print('end time is ', end)
     end = end[0:10] + 'T00:00:00Z'
     print('end is ',end)
 
-
+    # temp
+    start = '2017-06-02T00:00:00Z'
+    end = '2017-06-04T00:00:00Z'
 
     schedule = Schedule((e,p))
 
@@ -67,7 +64,6 @@ if __name__ == '__main__':
     for cal in schedule.calendars:
         print('attempting to fetch events for',e)
         try:
-            #result = cal.getEvents()
             result = cal.getEvents(start=start,end=end, eventCount=100)
             print('Got events',result,'got',len(cal.events))
         except:
@@ -76,7 +72,6 @@ if __name__ == '__main__':
         print('attempting for event information')
         time_string_time = '%H:%M:%SZ'
         for event in cal.events:
-            #print('HERE!')
             event = event.fullcalendarioJson()
             end_time = time.mktime(time.strptime(event['end'], '%Y-%m-%dT%H:%M:%SZ'))
             start_time = time.mktime(time.strptime(event['start'], '%Y-%m-%dT%H:%M:%SZ'))
@@ -86,29 +81,32 @@ if __name__ == '__main__':
             event.update({'event_time': event_time})
 
             bookings.append(event)
-            print('bookings is ', bookings)
+            #print('bookings is ', bookings)
+
+            for key in category_dict:
+               title = event['title']
+               #print('title is ', title)
+               #print('key is ', key)
+               if key in title:
+                   n = category_dict[key]
+                   event_time = time.strptime(event_time, '%H:%M:%SZ')
+                   print('n is ',n)
+                   n = time.strptime(n, '%H:%M:%SZ')
+                   print('n is ',n)
+                   event_time = time.strptime(event_time, '%H:%M:%SZ')
+                   print('n is ',n)
+                   n += event_time
+                   print('n is ',n)
+                   n = time.strftime(time_string_time, time.gmtime(n))
+                   print('n is ',n)
+                   category_dict[key] = n
+                   break
+
+    print('category_dict is ',category_dict)
 
 
-        for key in category_dict:
-            print('key is ', key)
-            print('key type is ', type(key))
-            title = event['title'].encode('utf-8')
-            print('title type is ', type(title))
-            print('title is ', title)
-            result = re.search(r'[work]', title)
-            print('result is ',result)
- 
-            if result is not None:
-                n = category_dict['[work]']
-                n += 1
-                category_dict['[work]'] = n
-                #break
 
-        print('category_dict is ',category_dict)
-
-
-
-    print('bookings is ', bookings)
+    #print('bookings is ', bookings)
     json_outs[e] = bookings
 
     events_all = json.dumps(bookings,sort_keys=True,indent=4)
