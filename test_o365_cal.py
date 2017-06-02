@@ -15,7 +15,7 @@ category_dict = password_list.category_dict
 # category_dict = {'[mtg]':'00:00:00Z','[work]':'00:00:00Z','[study]':'00:00:00Z','[fun]':'00:00:00Z','[move]':'00:00:00Z','[other]':'00:00:00Z'}
 
 import time
-from datetime import datetime
+import datetime
 
 import re
 
@@ -77,7 +77,6 @@ if __name__ == '__main__':
             start_time = time.mktime(time.strptime(event['start'], '%Y-%m-%dT%H:%M:%SZ'))
             event_time = end_time - start_time
             event_time = time.strftime(time_string_time, time.gmtime(event_time))
-            print('event time is ', event_time)
             event.update({'event_time': event_time})
 
             bookings.append(event)
@@ -89,28 +88,25 @@ if __name__ == '__main__':
                #print('key is ', key)
                if key in title:
                    n = category_dict[key]
-                   event_time = time.strptime(event_time, '%H:%M:%SZ')
-                   print('n is ',n)
-                   n = time.strptime(n, '%H:%M:%SZ')
-                   print('n is ',n)
-                   event_time = time.strptime(event_time, '%H:%M:%SZ')
-                   print('n is ',n)
+
+                   event_time = str(event_time)[0:-1].split(':')
+                   n = str(n)[0:-1].split(':')
+                   event_time = int(event_time[0]) * 3600 + int(event_time[1]) * 60 + int(event_time[2])
+                   n = int(n[0]) * 3600 + int(n[1]) * 60 + int(n[2])
                    n += event_time
-                   print('n is ',n)
                    n = time.strftime(time_string_time, time.gmtime(n))
-                   print('n is ',n)
                    category_dict[key] = n
                    break
 
-    print('category_dict is ',category_dict)
-
-
-
+    #print('category_dict is ',category_dict)
     #print('bookings is ', bookings)
     json_outs[e] = bookings
+    json_outs[e] = category_dict
 
     events_all = json.dumps(bookings,sort_keys=True,indent=4)
+    category_all = json.dumps(category_dict,sort_keys=True,indent=4)
     print(events_all)
+    print(category_all)
 
     #with open('bookings.json','w') as outs:
     #    outs.write(json.dumps(json_outs,sort_keys=True,indent=4))
