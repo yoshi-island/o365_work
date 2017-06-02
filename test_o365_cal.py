@@ -21,7 +21,11 @@ import re
 
 
 
-if __name__ == '__main__':
+def get_calender_format(start=None, end=None):
+
+    if (start or end) == None:
+      print('start or end is not defined')
+      exit()
 
     schedules = []
     json_outs = {}
@@ -29,29 +33,8 @@ if __name__ == '__main__':
     e = user
     p = password
 
-
-    # get time format
-    time_string = '%Y-%m-%dT%H:%M:%SZ'
-
-    start = time.time()
-    start = time.strftime(time_string)
-    #print('now is ', start)
-    start = start[0:10] + 'T00:00:00Z'
-    print('start is ',start)
-
-    end = time.time()
-    end += 60*60*24*1.5
-    end = time.gmtime(end)
-    end = time.strftime(time_string,end)
-    #print('end time is ', end)
-    end = end[0:10] + 'T00:00:00Z'
-    print('end is ',end)
-
-    # temp
-    start = '2017-06-02T00:00:00Z'
-    end = '2017-06-04T00:00:00Z'
-
     schedule = Schedule((e,p))
+
 
     try:
         result = schedule.getCalendars()
@@ -60,7 +43,6 @@ if __name__ == '__main__':
         print('Login failed for',e)
 
     bookings = []
-
     for cal in schedule.calendars:
         print('attempting to fetch events for',e)
         try:
@@ -75,17 +57,15 @@ if __name__ == '__main__':
             event = event.fullcalendarioJson()
             end_time = time.mktime(time.strptime(event['end'], '%Y-%m-%dT%H:%M:%SZ'))
             start_time = time.mktime(time.strptime(event['start'], '%Y-%m-%dT%H:%M:%SZ'))
+
             event_time = end_time - start_time
             event_time = time.strftime(time_string_time, time.gmtime(event_time))
             event.update({'event_time': event_time})
 
             bookings.append(event)
-            #print('bookings is ', bookings)
 
             for key in category_dict:
                title = event['title']
-               #print('title is ', title)
-               #print('key is ', key)
                if key in title:
                    n = category_dict[key]
 
@@ -98,18 +78,46 @@ if __name__ == '__main__':
                    category_dict[key] = n
                    break
 
-    #print('category_dict is ',category_dict)
-    #print('bookings is ', bookings)
+    # format json
     json_outs[e] = bookings
     json_outs[e] = category_dict
 
     events_all = json.dumps(bookings,sort_keys=True,indent=4)
     category_all = json.dumps(category_dict,sort_keys=True,indent=4)
+
+    return(events_all, category_all)
+
+
+
+
+
+
+
+if __name__ == '__main__':
+
+    # get time format
+    time_string = '%Y-%m-%dT%H:%M:%SZ'
+
+    start = time.time()
+    start = time.strftime(time_string)
+    start = start[0:10] + 'T00:00:00Z'
+    print('start is ',start)
+
+    end = time.time()
+    end += 60*60*24*1.5
+    end = time.gmtime(end)
+    end = time.strftime(time_string,end)
+    end = end[0:10] + 'T00:00:00Z'
+    print('end is ',end)
+
+    # temp
+    start = '2017-06-02T00:00:00Z'
+    end = '2017-06-04T00:00:00Z'
+
+    outputs = get_calender_format(start,end)
+    events_all = outputs[0]
+    category_all = outputs[1]
     print(events_all)
     print(category_all)
 
-    #with open('bookings.json','w') as outs:
-    #    outs.write(json.dumps(json_outs,sort_keys=True,indent=4))
     
-    
-#To the King!
