@@ -21,10 +21,14 @@ import re
 
 
 
-def get_calender_format(start=None, end=None):
+def get_calender_format(start=None, end=None, category_dict=None):
 
     if (start or end) == None:
       print('start or end is not defined')
+      exit()
+
+    if (category_dict) == None:
+      print('category_dict is not defined')
       exit()
 
     schedules = []
@@ -43,9 +47,12 @@ def get_calender_format(start=None, end=None):
         print('Login failed for',e)
 
     bookings = []
+    category_dict = category_dict
     for cal in schedule.calendars:
         print('attempting to fetch events for',e)
         try:
+            print('start is ', start)
+            print('end is ', end)
             result = cal.getEvents(start=start,end=end, eventCount=100)
             print('Got events',result,'got',len(cal.events))
         except:
@@ -76,6 +83,7 @@ def get_calender_format(start=None, end=None):
                    n += event_time
                    n = time.strftime(time_string_time, time.gmtime(n))
                    category_dict[key] = n
+                   #print(category_dict)
                    break
 
     # format json
@@ -98,26 +106,44 @@ if __name__ == '__main__':
     # get time format
     time_string = '%Y-%m-%dT%H:%M:%SZ'
 
-    start = time.time()
+    # get today start
     start = time.strftime(time_string)
     start = start[0:10] + 'T00:00:00Z'
     print('start is ',start)
 
+    # get today end
     end = time.time()
-    end += 60*60*24*1.5
+    end += 60*60*24
     end = time.gmtime(end)
     end = time.strftime(time_string,end)
     end = end[0:10] + 'T00:00:00Z'
     print('end is ',end)
 
+    # get month start
+    start_month = time.strftime(time_string)
+    start_month = start_month[0:7] + '-01T00:00:00Z'
+    print('start_month is ', start_month)
+
     # temp
     start = '2017-06-02T00:00:00Z'
-    end = '2017-06-04T00:00:00Z'
+    end = '2017-06-03T00:00:00Z'
+    #start_month = '2017-06-01T00:00:00Z'
 
-    outputs = get_calender_format(start,end)
+    outputs = get_calender_format(start,end,category_dict)
     events_all = outputs[0]
     category_all = outputs[1]
-    print(events_all)
+    #print(events_all)
     print(category_all)
 
-    
+    # reset dict
+    for key in category_dict.keys():
+      category_dict[key] = '00:00:00Z'
+    #print('category_dict is ', category_dict)
+
+
+    outputs_month = get_calender_format(start_month,end,category_dict)
+    events_all_month = outputs_month[0]
+    category_all_month = outputs_month[1]
+    #print(events_all_month)
+    print(category_all_month)
+
