@@ -110,6 +110,7 @@ def get_date(start=None,end=None):
     if start == None:
       # get today start
       start = time.strftime(time_string)
+      print('start is ',start)
       start = start[0:10] + 'T00:00:00Z'
       print('start is ',start)
 
@@ -119,6 +120,7 @@ def get_date(start=None,end=None):
       end += 60*60*24
       end = time.gmtime(end)
       end = time.strftime(time_string,end)
+      print('end is ',end)
       end = end[0:10] + 'T00:00:00Z'
       print('end is ',end)
 
@@ -127,15 +129,12 @@ def get_date(start=None,end=None):
     start_month = start_month[0:7] + '-01T00:00:00Z'
     print('start_month is ', start_month)
 
-    # temp
-    start = '2017-06-02T00:00:00Z'
-    end = '2017-06-03T00:00:00Z'
-    #start_month = '2017-06-01T00:00:00Z'
-
     return start,end,start_month
 
 
 #if __name__ == '__main__':
+#    start = 'YYYYMMDD'
+#    end = 'YYYYMMDD'
 def execution(start='YYYYMMDD',end='YYYYMMDD'):
 
     get_date_result = get_date()
@@ -146,10 +145,6 @@ def execution(start='YYYYMMDD',end='YYYYMMDD'):
       end = get_date_result[1]
     else:
 
-#custom start is  20170602
-#custom end is  20170601
-#custom start formatted is  201-0-0T00:00:00Z
-#custom end formatted is  201-0-0T00:00:00Z
 
       print('custom start is ', start)
       print('custom end is ', end)
