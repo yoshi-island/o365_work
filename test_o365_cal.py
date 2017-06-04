@@ -146,18 +146,46 @@ def execution():
     outputs = get_calender_format(start,end,category_dict)
     events_all = outputs[0]
     category_all = outputs[1]
-    #print(events_all)
+    print(events_all)
     print(category_all)
 
     # reset dict
     for key in category_dict.keys():
       category_dict[key] = '00:00:00Z'
-    #print('category_dict is ', category_dict)
+    print('category_dict is ', category_dict)
 
 
     outputs_month = get_calender_format(start_month,end,category_dict)
     events_all_month = outputs_month[0]
     category_all_month = outputs_month[1]
-    #print(events_all_month)
+    print(events_all_month)
     print(category_all_month)
+
+    return start,end,start_month,category_all,category_all_month
+
+
+    get_date_result = get_date()
+    start = get_date_result[0]
+    end = get_date_result[1]
+    start_month = get_date_result[2]
+
+    outputs = get_calender_format(start,end,category_dict)
+    events_all = outputs[0]
+    category_all = outputs[1]
+    print(events_all)
+    print(category_all)
+
+    # reset dict
+    for key in category_dict.keys():
+      category_dict[key] = '00:00:00Z'
+    print('category_dict is ', category_dict)
+
+
+    outputs_month = get_calender_format(start_month,end,category_dict)
+    events_all_month = outputs_month[0]
+    category_all_month = outputs_month[1]
+    print(events_all_month)
+    print(category_all_month)
+
+    return start,end,start_month,category_all,category_all_month
 
