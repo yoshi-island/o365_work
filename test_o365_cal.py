@@ -101,23 +101,26 @@ def get_calender_format(start=None, end=None, category_dict=None):
 
 
 
-if __name__ == '__main__':
+#if __name__ == '__main__':
+def get_date(start=None,end=None):
 
     # get time format
     time_string = '%Y-%m-%dT%H:%M:%SZ'
 
-    # get today start
-    start = time.strftime(time_string)
-    start = start[0:10] + 'T00:00:00Z'
-    print('start is ',start)
+    if start == None:
+      # get today start
+      start = time.strftime(time_string)
+      start = start[0:10] + 'T00:00:00Z'
+      print('start is ',start)
 
-    # get today end
-    end = time.time()
-    end += 60*60*24
-    end = time.gmtime(end)
-    end = time.strftime(time_string,end)
-    end = end[0:10] + 'T00:00:00Z'
-    print('end is ',end)
+    if end == None:
+      # get today end
+      end = time.time()
+      end += 60*60*24
+      end = time.gmtime(end)
+      end = time.strftime(time_string,end)
+      end = end[0:10] + 'T00:00:00Z'
+      print('end is ',end)
 
     # get month start
     start_month = time.strftime(time_string)
@@ -128,6 +131,17 @@ if __name__ == '__main__':
     start = '2017-06-02T00:00:00Z'
     end = '2017-06-03T00:00:00Z'
     #start_month = '2017-06-01T00:00:00Z'
+
+    return start,end,start_month
+
+
+#if __name__ == '__main__':
+def execution():
+
+    get_date_result = get_date()
+    start = get_date_result[0]
+    end = get_date_result[1]
+    start_month = get_date_result[2]
 
     outputs = get_calender_format(start,end,category_dict)
     events_all = outputs[0]
