@@ -136,12 +136,33 @@ def get_date(start=None,end=None):
 
 
 #if __name__ == '__main__':
-def execution():
+def execution(start='YYYYMMDD',end='YYYYMMDD'):
 
     get_date_result = get_date()
-    start = get_date_result[0]
-    end = get_date_result[1]
     start_month = get_date_result[2]
+
+    if start == 'YYYYMMDD':
+      start = get_date_result[0]
+      end = get_date_result[1]
+    else:
+
+#custom start is  20170602
+#custom end is  20170601
+#custom start formatted is  201-0-0T00:00:00Z
+#custom end formatted is  201-0-0T00:00:00Z
+
+      print('custom start is ', start)
+      print('custom end is ', end)
+      YYYY = start[0:4]
+      MM = start[4:6]
+      DD = start[6:8]
+      start = YYYY + '-' + MM + '-' + DD + 'T00:00:00Z'
+      YYYY = end[0:4]
+      MM = end[4:6]
+      DD = end[6:8]
+      end = YYYY + '-' + MM + '-' + DD + 'T00:00:00Z'
+      print('custom start formatted is ', start)
+      print('custom end formatted is ', end)
 
     outputs = get_calender_format(start,end,category_dict)
     events_all = outputs[0]
@@ -162,30 +183,3 @@ def execution():
     print(category_all_month)
 
     return start,end,start_month,category_all,category_all_month
-
-
-    get_date_result = get_date()
-    start = get_date_result[0]
-    end = get_date_result[1]
-    start_month = get_date_result[2]
-
-    outputs = get_calender_format(start,end,category_dict)
-    events_all = outputs[0]
-    category_all = outputs[1]
-    print(events_all)
-    print(category_all)
-
-    # reset dict
-    for key in category_dict.keys():
-      category_dict[key] = '00:00:00Z'
-    print('category_dict is ', category_dict)
-
-
-    outputs_month = get_calender_format(start_month,end,category_dict)
-    events_all_month = outputs_month[0]
-    category_all_month = outputs_month[1]
-    print(events_all_month)
-    print(category_all_month)
-
-    return start,end,start_month,category_all,category_all_month
-
