@@ -7,6 +7,7 @@ import json
 import urllib3
 urllib3.disable_warnings()
 
+
 import password_list
 user = password_list.user
 password = password_list.password
@@ -131,7 +132,7 @@ def get_calender_format(start=None, end=None, category_dict=None):
 def execution(start='YYYYMMDD',end='YYYYMMDD'):
 
     get_date_result = get_date()
-    get_date_result = ('2017-06-08T00:00:00Z', '2017-06-09T23:59:59Z', '2017-06-01T00:00:00Z')
+    #get_date_result = ('2017-06-08T00:00:00Z', '2017-06-09T23:59:59Z', '2017-06-01T00:00:00Z')
 
     # set date time info
     start_month = get_date_result[2]
